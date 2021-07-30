@@ -22,7 +22,7 @@ variable "interface_profiles" {
 }
 
 variable "selectors" {
-  description = "List of Selectors"
+  description = "List of Selectors, Allowed values `from`: 1-4000, Allowed values `to`: 1-4000."
   type = list(object({
     name = string
     node_blocks = list(object({
