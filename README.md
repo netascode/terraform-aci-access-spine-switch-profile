@@ -53,8 +53,8 @@ module "aci_access_spine_switch_profile" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_dn"></a> [dn](#output\_dn) | Distinguished name of `infraSpineP` object |
-| <a name="output_name"></a> [name](#output\_name) | Spine switch profile name |
+| <a name="output_dn"></a> [dn](#output\_dn) | Distinguished name of `infraSpineP` object. |
+| <a name="output_name"></a> [name](#output\_name) | Spine switch profile name. |
 
 ## Resources
 
