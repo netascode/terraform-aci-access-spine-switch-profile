@@ -5,8 +5,8 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
@@ -17,7 +17,7 @@ module "main" {
   name = "SPINE1001"
 }
 
-data "aci_rest" "infraSpineP" {
+data "aci_rest_managed" "infraSpineP" {
   dn = "uni/infra/spprof-${module.main.name}"
 
   depends_on = [module.main]
@@ -28,7 +28,7 @@ resource "test_assertions" "infraSpineP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraSpineP.content.name
+    got         = data.aci_rest_managed.infraSpineP.content.name
     want        = module.main.name
   }
 }

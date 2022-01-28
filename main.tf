@@ -15,7 +15,7 @@ locals {
   ])
 }
 
-resource "aci_rest" "infraSpineP" {
+resource "aci_rest_managed" "infraSpineP" {
   dn         = "uni/infra/spprof-${var.name}"
   class_name = "infraSpineP"
   content = {
@@ -23,18 +23,18 @@ resource "aci_rest" "infraSpineP" {
   }
 }
 
-resource "aci_rest" "infraSpineS" {
+resource "aci_rest_managed" "infraSpineS" {
   for_each   = { for sel in var.selectors : sel.name => sel }
-  dn         = "${aci_rest.infraSpineP.dn}/spines-${each.value.name}-typ-range"
+  dn         = "${aci_rest_managed.infraSpineP.dn}/spines-${each.value.name}-typ-range"
   class_name = "infraSpineS"
   content = {
     name = each.value.name
   }
 }
 
-resource "aci_rest" "infraNodeBlk" {
+resource "aci_rest_managed" "infraNodeBlk" {
   for_each   = { for item in local.node_blocks : item.key => item.value }
-  dn         = "${aci_rest.infraSpineS[each.value.selector].dn}/nodeblk-${each.value.name}"
+  dn         = "${aci_rest_managed.infraSpineS[each.value.selector].dn}/nodeblk-${each.value.name}"
   class_name = "infraNodeBlk"
   content = {
     name  = each.value.name
@@ -43,9 +43,9 @@ resource "aci_rest" "infraNodeBlk" {
   }
 }
 
-resource "aci_rest" "infraRsSpAccPortP" {
+resource "aci_rest_managed" "infraRsSpAccPortP" {
   for_each   = toset(local.spine_interface_profiles)
-  dn         = "${aci_rest.infraSpineP.dn}/rsspAccPortP-[${each.value}]"
+  dn         = "${aci_rest_managed.infraSpineP.dn}/rsspAccPortP-[${each.value}]"
   class_name = "infraRsSpAccPortP"
   content = {
     tDn = each.value

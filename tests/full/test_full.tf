@@ -5,8 +5,8 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
@@ -26,7 +26,7 @@ module "main" {
   }]
 }
 
-data "aci_rest" "infraSpineP" {
+data "aci_rest_managed" "infraSpineP" {
   dn = "uni/infra/spprof-${module.main.name}"
 
   depends_on = [module.main]
@@ -37,13 +37,13 @@ resource "test_assertions" "infraSpineP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraSpineP.content.name
+    got         = data.aci_rest_managed.infraSpineP.content.name
     want        = module.main.name
   }
 }
 
-data "aci_rest" "infraSpineS" {
-  dn = "${data.aci_rest.infraSpineP.id}/spines-SEL1-typ-range"
+data "aci_rest_managed" "infraSpineS" {
+  dn = "${data.aci_rest_managed.infraSpineP.id}/spines-SEL1-typ-range"
 
   depends_on = [module.main]
 }
@@ -53,13 +53,13 @@ resource "test_assertions" "infraSpineS" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraSpineS.content.name
+    got         = data.aci_rest_managed.infraSpineS.content.name
     want        = "SEL1"
   }
 }
 
-data "aci_rest" "infraNodeBlk" {
-  dn = "${data.aci_rest.infraSpineS.id}/nodeblk-BLOCK1"
+data "aci_rest_managed" "infraNodeBlk" {
+  dn = "${data.aci_rest_managed.infraSpineS.id}/nodeblk-BLOCK1"
 
   depends_on = [module.main]
 }
@@ -69,25 +69,25 @@ resource "test_assertions" "infraNodeBlk" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraNodeBlk.content.name
+    got         = data.aci_rest_managed.infraNodeBlk.content.name
     want        = "BLOCK1"
   }
 
   equal "from_" {
     description = "from_"
-    got         = data.aci_rest.infraNodeBlk.content.from_
+    got         = data.aci_rest_managed.infraNodeBlk.content.from_
     want        = "1001"
   }
 
   equal "to_" {
     description = "to_"
-    got         = data.aci_rest.infraNodeBlk.content.to_
+    got         = data.aci_rest_managed.infraNodeBlk.content.to_
     want        = "1001"
   }
 }
 
-data "aci_rest" "infraRsSpAccPortP" {
-  dn = "${data.aci_rest.infraSpineP.id}/rsspAccPortP-[uni/infra/spaccportprof-SPINE1001]"
+data "aci_rest_managed" "infraRsSpAccPortP" {
+  dn = "${data.aci_rest_managed.infraSpineP.id}/rsspAccPortP-[uni/infra/spaccportprof-SPINE1001]"
 
   depends_on = [module.main]
 }
@@ -97,7 +97,7 @@ resource "test_assertions" "infraRsSpAccPortP" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.infraRsSpAccPortP.content.tDn
+    got         = data.aci_rest_managed.infraRsSpAccPortP.content.tDn
     want        = "uni/infra/spaccportprof-SPINE1001"
   }
 }

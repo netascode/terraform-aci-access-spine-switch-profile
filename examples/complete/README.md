@@ -14,7 +14,7 @@ Note that this example will create resources. Resources can be destroyed with `t
 ```hcl
 module "aci_access_spine_switch_profile" {
   source  = "netascode/access-spine-switch-profile/aci"
-  version = ">= 0.0.1"
+  version = ">= 0.1.0"
 
   name               = "SPINE1001"
   interface_profiles = ["SPINE1001"]
@@ -27,6 +27,5 @@ module "aci_access_spine_switch_profile" {
     }]
   }]
 }
-
 ```
 <!-- END_TF_DOCS -->
