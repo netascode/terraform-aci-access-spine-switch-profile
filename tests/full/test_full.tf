@@ -19,7 +19,8 @@ module "main" {
   name               = "SPINE1001"
   interface_profiles = ["SPINE1001"]
   selectors = [{
-    name = "SEL1"
+    name         = "SEL1"
+    policy_group = "IPG1"
     node_blocks = [{
       name = "BLOCK1"
       from = 1001
@@ -57,6 +58,22 @@ resource "test_assertions" "infraSpineS" {
     description = "name"
     got         = data.aci_rest_managed.infraSpineS.content.name
     want        = "SEL1"
+  }
+}
+
+data "aci_rest_managed" "infraRsSpineAccNodePGrp" {
+  dn = "${data.aci_rest_managed.infraSpineS.id}/rsspineAccNodePGrp"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "infraRsSpineAccNodePGrp" {
+  component = "infraRsSpineAccNodePGrp"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.infraRsSpineAccNodePGrp.content.tDn
+    want        = "uni/infra/funcprof/spaccnodepgrp-IPG1"
   }
 }
 

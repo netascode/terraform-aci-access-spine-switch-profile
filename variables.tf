@@ -24,7 +24,8 @@ variable "interface_profiles" {
 variable "selectors" {
   description = "List of selectors. Allowed values `from`: 1-4000. Allowed values `to`: 1-4000."
   type = list(object({
-    name = string
+    name         = string
+    policy_group = optional(string)
     node_blocks = list(object({
       name = string
       from = number
@@ -38,6 +39,13 @@ variable "selectors" {
       for s in var.selectors : can(regex("^[a-zA-Z0-9_.-]{0,64}$", s.name))
     ])
     error_message = "`name`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+
+  validation {
+    condition = alltrue([
+      for s in var.selectors : s.policy_group == null || can(regex("^[a-zA-Z0-9_.-]{0,64}$", s.policy_group))
+    ])
+    error_message = "`policy_group`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
   }
 
   validation {

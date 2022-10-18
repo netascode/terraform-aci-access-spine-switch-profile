@@ -32,6 +32,15 @@ resource "aci_rest_managed" "infraSpineS" {
   }
 }
 
+resource "aci_rest_managed" "infraRsSpineAccNodePGrp" {
+  for_each   = { for sel in var.selectors : sel.name => sel if sel.policy_group != null }
+  dn         = "${aci_rest_managed.infraSpineS[each.value.name].dn}/rsspineAccNodePGrp"
+  class_name = "infraRsSpineAccNodePGrp"
+  content = {
+    tDn = "uni/infra/funcprof/spaccnodepgrp-${each.value.policy_group}"
+  }
+}
+
 resource "aci_rest_managed" "infraNodeBlk" {
   for_each   = { for item in local.node_blocks : item.key => item.value }
   dn         = "${aci_rest_managed.infraSpineS[each.value.selector].dn}/nodeblk-${each.value.name}"
